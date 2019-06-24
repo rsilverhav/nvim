@@ -3,8 +3,10 @@ import json
 import pynvim
 import requests
 import urllib.request
+from os.path import expanduser
 
-TOKENS_FILE = ".tokens.json"
+home = expanduser("~")
+TOKENS_FILE = home + "/.tokens.json"
 
 @pynvim.plugin
 class SpotifyControl(object):
