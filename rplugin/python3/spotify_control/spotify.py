@@ -1,6 +1,5 @@
 import base64
 import json
-import pynvim
 import requests
 import urllib.request
 from os.path import expanduser
@@ -8,24 +7,9 @@ from os.path import expanduser
 home = expanduser("~")
 TOKENS_FILE = home + "/.tokens.json"
 
-@pynvim.plugin
-class SpotifyControl(object):
+class Spotify():
     def __init__(self, vim):
         self.vim = vim
-        self.calls = 0
-        self.first_buffer = None
-
-    @pynvim.command('SpotifyInit', range='', nargs='*', sync=True)
-    def spotify_init(self, args, range):
-        self.vim.command('enew')
-        self.first_buffer = self.vim.current.buffer
-
-        playlists = self.get_playlists()
-        playlistNames = []
-        for playlist in playlists["items"]:
-            playlistNames.append(playlist["name"])
-        self.first_buffer.api.set_lines(0, -1, 0, playlistNames)
-        self.vim.command('set nomodifiable')
 
     def get_auth_string(self):
         encode_str = self.vim.eval("g:spotify_client_id") + ":" + self.vim.eval("g:spotify_client_secret")
@@ -85,4 +69,3 @@ class SpotifyControl(object):
         tokens = self.get_tokens()
         resp = self.make_spotify_request("https://api.spotify.com/v1/me/playlists", False, {}, True)
         return resp
-
