@@ -152,12 +152,6 @@ autocmd filetype qf wincmd J
 let g:deoplete#enable_at_startup = 1
 
 "
-" Source
-"
-source ~/.config/nvim/secrets.vim
-source ~/.config/nvim/coc.vim
-
-"
 " Keybinds
 "
 let mapleader=" "
@@ -190,3 +184,9 @@ map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans
       \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 
 imap jk <ESC>
+
+"
+" Source
+"
+source ~/.config/nvim/secrets.vim
+source ~/.config/nvim/coc.vim
