@@ -68,4 +68,7 @@ class Spotify():
     def get_playlists(self):
         tokens = self.get_tokens()
         resp = self.make_spotify_request("https://api.spotify.com/v1/me/playlists", False, {}, True)
-        return resp
+        playlists = []
+        for playlist in resp["items"]:
+            playlists.append(playlist["name"])
+        return playlists
