@@ -85,8 +85,8 @@ class Spotify():
             url = resp["next"]
         return songs_data
 
-    def play_song(self, song_id):
+    def play_song(self, song_id, context):
         song_uri = "spotify:track:{}".format(song_id)
-        data = { "uris": [song_uri] }
+        data = { "context_uri": context, "offset": { "uri": song_uri}}
         resp = self.make_spotify_request("https://api.spotify.com/v1/me/player/play", "PUT", json.dumps(data), True)
         return resp

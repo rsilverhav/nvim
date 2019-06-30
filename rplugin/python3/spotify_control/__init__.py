@@ -8,6 +8,7 @@ class SpotifyControl(object):
         self.vim = vim
         self.playlists_data = []
         self.results_data = []
+        self.results_context = None
         self.spotify = Spotify(vim)
         self.ui_handler = UIHandler(vim)
 
@@ -24,6 +25,7 @@ class SpotifyControl(object):
         current_index = current_line - 1
         if current_index >= 0 and current_index < len(self.playlists_data):
             playlist_id = self.playlists_data[current_index]['id']
+            self.results_context = 'spotify:playlist:' + playlist_id
             self.results_data = self.spotify.get_playlists_tracks_data(playlist_id)
             songs = []
             for track_data in self.results_data:
@@ -37,4 +39,5 @@ class SpotifyControl(object):
         current_line = self.vim.eval('line(".")')
         current_index = current_line - 1
         if current_index >= 0 and current_index < len(self.results_data):
-            self.spotify.play_song(self.results_data[current_index]['track']['id'])
+            track_id = self.results_data[current_index]['track']['id']
+            self.spotify.play_song(track_id, self.results_context)
