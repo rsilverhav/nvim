@@ -73,6 +73,12 @@ class Spotify():
     def get_playlists_tracks_data(self, playlist_id):
         tokens = self.get_tokens()
         url = "https://api.spotify.com/v1/playlists/{}/tracks".format(playlist_id)
-        resp = self.make_spotify_request(url, False, {}, True)
-        # TODO: 'nextUrl': resp['next'] <--- if exists, fetch more, resturn all items
-        return resp["items"]
+        songs_data = []
+        while url != None:
+            resp = self.make_spotify_request(url, False, {}, True)
+            songs_data.extend(resp["items"])
+            url = resp['next']
+        return songs_data
+
+    def play_song(self, song_id):
+        print('will play song')
