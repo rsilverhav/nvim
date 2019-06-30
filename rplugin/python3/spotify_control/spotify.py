@@ -46,28 +46,33 @@ class Spotify():
         f.write(new_tokens_string)
         f.close()
 
-    def make_spotify_request(self, url, isPost, params, retry_on_fail):
+    def make_spotify_request(self, url, method, params, retry_on_fail):
         tokens = self.get_tokens()
         resp = None
-        if isPost:
+        if method == "POST":
             resp = requests.post(url=url, headers={"Authorization": "Bearer " + tokens["access_token"]}, data=params)
-        else:
+        elif method == "GET":
             resp = requests.get(url=url, headers={"Authorization": "Bearer " + tokens["access_token"]}, data=params)
-        if resp.status_code != 200 and retry_on_fail:
+        elif method == "PUT":
+            resp = requests.put(url=url, headers={"Authorization": "Bearer " + tokens["access_token"], "Content-Type": "application/json"}, data=params)
+        if resp.status_code == 200:
+            content = json.loads(resp.content)
+            return content
+        elif resp.status_code == 204:
+            return True
+        elif retry_on_fail:
             self.refresh_token()
-            return self.make_spotify_request(url, isPost, params, False)
-        content = json.loads(resp.content)
-        return content
+            return self.make_spotify_request(url, method, params, False)
 
 
     def get_my_info(self):
         tokens = self.get_tokens()
-        resp = self.make_spotify_request("https://api.spotify.com/v1/me", False, {}, True)
+        resp = self.make_spotify_request("https://api.spotify.com/v1/me", "GET", {}, True)
         print(resp)
 
     def get_playlists_data(self):
         tokens = self.get_tokens()
-        resp = self.make_spotify_request("https://api.spotify.com/v1/me/playlists", False, {}, True)
+        resp = self.make_spotify_request("https://api.spotify.com/v1/me/playlists", "GET", {}, True)
         return resp["items"]
 
     def get_playlists_tracks_data(self, playlist_id):
@@ -75,10 +80,13 @@ class Spotify():
         url = "https://api.spotify.com/v1/playlists/{}/tracks".format(playlist_id)
         songs_data = []
         while url != None:
-            resp = self.make_spotify_request(url, False, {}, True)
+            resp = self.make_spotify_request(url, "GET", {}, True)
             songs_data.extend(resp["items"])
-            url = resp['next']
+            url = resp["next"]
         return songs_data
 
     def play_song(self, song_id):
-        print('will play song')
+        song_uri = "spotify:track:{}".format(song_id)
+        data = { "uris": [song_uri] }
+        resp = self.make_spotify_request("https://api.spotify.com/v1/me/player/play", "PUT", json.dumps(data), True)
+        return resp
