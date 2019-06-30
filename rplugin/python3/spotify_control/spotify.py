@@ -78,15 +78,15 @@ class Spotify():
     def get_playlists_tracks_data(self, playlist_id):
         tokens = self.get_tokens()
         url = "https://api.spotify.com/v1/playlists/{}/tracks".format(playlist_id)
-        songs_data = []
+        tracks_data = []
         while url != None:
             resp = self.make_spotify_request(url, "GET", {}, True)
-            songs_data.extend(resp["items"])
+            tracks_data.extend(resp["items"])
             url = resp["next"]
-        return songs_data
+        return tracks_data
 
-    def play_song(self, song_id, context):
-        song_uri = "spotify:track:{}".format(song_id)
-        data = { "context_uri": context, "offset": { "uri": song_uri}}
+    def play_track(self, track_id, context):
+        track_uri = "spotify:track:{}".format(track_id)
+        data = { "context_uri": context, "offset": { "uri": track_uri}}
         resp = self.make_spotify_request("https://api.spotify.com/v1/me/player/play", "PUT", json.dumps(data), True)
         return resp

@@ -27,17 +27,17 @@ class SpotifyControl(object):
             playlist_id = self.playlists_data[current_index]['id']
             self.results_context = 'spotify:playlist:' + playlist_id
             self.results_data = self.spotify.get_playlists_tracks_data(playlist_id)
-            songs = []
+            tracks = []
             for track_data in self.results_data:
-                song_name = track_data['track']['name']
+                track_name = track_data['track']['name']
                 artists = ', '.join(map(lambda artist: artist['name'], track_data['track']['artists']))
-                songs.append('{} - {}'.format(song_name, artists))
-            self.ui_handler.set_results(songs)
+                tracks.append('{} - {}'.format(track_name, artists))
+            self.ui_handler.set_results(tracks)
 
     @pynvim.function('SpotifyPlayResult')
-    def function_play_song(self, args):
+    def function_play_track(self, args):
         current_line = self.vim.eval('line(".")')
         current_index = current_line - 1
         if current_index >= 0 and current_index < len(self.results_data):
             track_id = self.results_data[current_index]['track']['id']
-            self.spotify.play_song(track_id, self.results_context)
+            self.spotify.play_track(track_id, self.results_context)
