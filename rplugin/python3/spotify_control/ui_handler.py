@@ -12,6 +12,7 @@ class UIHandler():
         vim_buffer.api.set_option('swapfile', False)
         vim_buffer.api.set_option('buflisted', False)
         vim_buffer.api.set_option('undolevels', -1)
+        self.vim.command('nmap <buffer> q :call SpotifyClose()<CR>')
 
 
     def _set_buffer_content(self, vim_buffer, lines):
@@ -26,13 +27,13 @@ class UIHandler():
     def init_buffers(self, playlists):
         # setting up results buffer
         self.results_buffer = self.vim.current.buffer
-        self.vim.command('nnoremap <buffer> <Enter> :call SpotifyPlayResult()<CR>')
+        self.vim.command('nmap <buffer> <Enter> :call SpotifyPlayResult()<CR>')
         self._init_buffer_options(self.results_buffer)
 
         # setting up playlist buffer
         self.vim.command('topleft vertical 32 new')
         self.playlist_buffer = self.vim.current.buffer
-        self.vim.command('nnoremap <buffer> <Enter> :call SpotifyOpenPlaylist()<CR>')
+        self.vim.command('nmap <buffer> <Enter> :call SpotifyOpenPlaylist()<CR>')
 
         self._init_buffer_options(self.playlist_buffer)
         self._set_buffer_content(self.playlist_buffer, playlists)
@@ -41,3 +42,7 @@ class UIHandler():
         self.vim.command('set switchbuf=useopen')
         self.vim.command('sb {}'.format(self.results_buffer.number))
         self._set_buffer_content(self.results_buffer, results)
+
+    def close(self):
+        self.vim.command('bd {}'.format(self.results_buffer.number))
+        self.vim.command('bd {}'.format(self.playlist_buffer.number))

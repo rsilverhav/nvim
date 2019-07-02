@@ -41,3 +41,7 @@ class SpotifyControl(object):
         if current_index >= 0 and current_index < len(self.results_data):
             track_id = self.results_data[current_index]['track']['id']
             self.spotify.play_track(track_id, self.results_context)
+
+    @pynvim.function('SpotifyClose')
+    def function_close(self, args):
+        self.ui_handler.close()
