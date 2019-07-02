@@ -13,6 +13,7 @@ class UIHandler():
         vim_buffer.api.set_option('buflisted', False)
         vim_buffer.api.set_option('undolevels', -1)
         self.vim.command('nmap <buffer> q :call SpotifyClose()<CR>')
+        self.vim.command('nmap <buffer> f :call SpotifySearch()<CR>')
 
 
     def _set_buffer_content(self, vim_buffer, lines):
@@ -46,3 +47,7 @@ class UIHandler():
     def close(self):
         self.vim.command('bd {}'.format(self.results_buffer.number))
         self.vim.command('bd {}'.format(self.playlist_buffer.number))
+
+    def query_input(self, text):
+        self.vim.command('let user_input = input("{}: ")'.format(text))
+        return self.vim.eval('user_input')

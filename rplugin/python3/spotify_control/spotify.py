@@ -52,7 +52,7 @@ class Spotify():
         if method == "POST":
             resp = requests.post(url=url, headers={"Authorization": "Bearer " + tokens["access_token"]}, data=params)
         elif method == "GET":
-            resp = requests.get(url=url, headers={"Authorization": "Bearer " + tokens["access_token"]}, data=params)
+            resp = requests.get(url=url, headers={"Authorization": "Bearer " + tokens["access_token"]}, params=params)
         elif method == "PUT":
             resp = requests.put(url=url, headers={"Authorization": "Bearer " + tokens["access_token"], "Content-Type": "application/json"}, data=params)
         if resp.status_code == 200:
@@ -89,4 +89,9 @@ class Spotify():
         track_uri = "spotify:track:{}".format(track_id)
         data = { "context_uri": context, "offset": { "uri": track_uri}}
         resp = self.make_spotify_request("https://api.spotify.com/v1/me/player/play", "PUT", json.dumps(data), True)
+        return resp
+
+    def search(self, query):
+        data = { 'q': query, 'type': 'album,artist,playlist,track' }
+        resp = self.make_spotify_request("https://api.spotify.com/v1/search?{}", "GET", data, True)
         return resp

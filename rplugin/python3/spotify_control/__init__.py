@@ -1,4 +1,5 @@
 import pynvim
+import json
 from spotify_control.spotify import Spotify
 from spotify_control.ui_handler import UIHandler
 
@@ -45,3 +46,9 @@ class SpotifyControl(object):
     @pynvim.function('SpotifyClose')
     def function_close(self, args):
         self.ui_handler.close()
+
+    @pynvim.function('SpotifySearch')
+    def function_search(self, args):
+        search_query = self.ui_handler.query_input('Spotify search')
+        search_results = self.spotify.search(search_query)
+        self.ui_handler.set_results([json.dumps(search_results)])
