@@ -7,41 +7,46 @@ from spotify_control.ui_handler import UIHandler
 class SpotifyControl(object):
     def __init__(self, vim):
         self.vim = vim
-        self.playlists_data = []
-        self.results_data = []
+        self.buffers = []
         self.results_context = None
         self.spotify = Spotify(vim)
         self.ui_handler = UIHandler(vim)
 
+    def _get_buffer_by_name(self, name):
+        for buffer in self.buffers:
+            if buffer.name == name:
+                return buffer
+        return None
+
+    def _get_buffer_by_number(self, number):
+        for buffer in self.buffers:
+            if buffer.number == number:
+                return buffer
+        return None
+
     @pynvim.command('SpotifyInit', range='', nargs='*', sync=True)
     def spotify_init(self, args, range):
-        self.playlists_data = self.spotify.get_playlists_data()
-        playlist_names = list(map(lambda playlist_data: playlist_data['name'], self.playlists_data))
+        playlists_data = self.spotify.get_playlists_data()
+        playlists = list(map(lambda playlist_data: { "title": playlist_data['name'], "uri": playlist_data['uri'] }, playlists_data))
         self.vim.command('tab new')
-        self.ui_handler.init_buffers(playlist_names)
+        self.buffers = self.ui_handler.init_buffers(playlists)
 
-    @pynvim.function('SpotifyOpenPlaylist')
-    def function_open_playlist(self, args):
+    @pynvim.function('SpotifyOpenResult')
+    def function_open_result(self, args):
+        source_buf = args[0]
+        target_buf = args[1]
         current_line = self.vim.eval('line(".")')
-        current_index = current_line - 1
-        if current_index >= 0 and current_index < len(self.playlists_data):
-            playlist_id = self.playlists_data[current_index]['id']
-            self.results_context = 'spotify:playlist:' + playlist_id
-            self.results_data = self.spotify.get_playlists_tracks_data(playlist_id)
-            tracks = []
-            for track_data in self.results_data:
-                track_name = track_data['track']['name']
-                artists = ', '.join(map(lambda artist: artist['name'], track_data['track']['artists']))
-                tracks.append('{} - {}'.format(track_name, artists))
-            self.ui_handler.set_results(tracks)
+        row = self._get_buffer_by_number(source_buf).get_data_row(current_line)
+        new_data = self.spotify.get_data(row['uri'])
+        self._get_buffer_by_number(target_buf).set_data(new_data)
 
-    @pynvim.function('SpotifyPlayResult')
-    def function_play_track(self, args):
-        current_line = self.vim.eval('line(".")')
-        current_index = current_line - 1
-        if current_index >= 0 and current_index < len(self.results_data):
-            track_id = self.results_data[current_index]['track']['id']
-            self.spotify.play_track(track_id, self.results_context)
+    #@pynvim.function('SpotifyPlayResult')
+    #def function_play_track(self, args):
+    #    current_line = self.vim.eval('line(".")')
+    #    current_index = current_line - 1
+    #    if current_index >= 0 and current_index < len(self.results_data):
+    #        track_id = self.results_data[current_index]['track']['id']
+    #        self.spotify.play_track(track_id, self.results_context)
 
     @pynvim.function('SpotifyClose')
     def function_close(self, args):

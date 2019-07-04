@@ -95,3 +95,11 @@ class Spotify():
         data = { 'q': query, 'type': 'album,artist,playlist,track' }
         resp = self.make_spotify_request("https://api.spotify.com/v1/search?{}", "GET", data, True)
         return resp
+
+    def get_data(self, uri):
+        id = uri.split(':')[-1]
+        if 'playlist' in uri:
+            tracks_data = self.get_playlists_tracks_data(id)
+            tracks = list(map(lambda track_data: { 'title': track_data['track']['name'], 'uri': track_data['track']['uri'] }, tracks_data))
+            return tracks
+        return {}

@@ -1,52 +1,32 @@
+from spotify_control.buffer import Buffer
+
 class UIHandler():
     def __init__(self, vim):
         self.vim = vim
-        self.results_buffer = None
-        self.playlist_buffer = None
+        self.buffers = []
 
-    def _init_buffer_options(self, vim_buffer):
-        vim_buffer.api.set_option('modifiable', False)
-        vim_buffer.api.set_option('readonly', True)
-        vim_buffer.api.set_option('bufhidden', 'hide')
-        vim_buffer.api.set_option('buftype', 'nofile')
-        vim_buffer.api.set_option('swapfile', False)
-        vim_buffer.api.set_option('buflisted', False)
-        vim_buffer.api.set_option('undolevels', -1)
+    def init_buffers(self, playlists):
+        # setting up results buffer with bindings
+        results_buffer = Buffer("results", self.vim.current.buffer)
+        self.buffers.append(results_buffer)
+        self.vim.command('nmap <buffer> <Enter> :call SpotifyPlayResult()<CR>')
         self.vim.command('nmap <buffer> q :call SpotifyClose()<CR>')
         self.vim.command('nmap <buffer> f :call SpotifySearch()<CR>')
 
-
-    def _set_buffer_content(self, vim_buffer, lines):
-        vim_buffer.api.set_option('modifiable', True)
-        vim_buffer.api.set_option('readonly', False)
-
-        vim_buffer.api.set_lines(0, -1, 0, lines)
-
-        vim_buffer.api.set_option('modifiable', False)
-        vim_buffer.api.set_option('readonly', True)
-
-    def init_buffers(self, playlists):
-        # setting up results buffer
-        self.results_buffer = self.vim.current.buffer
-        self.vim.command('nmap <buffer> <Enter> :call SpotifyPlayResult()<CR>')
-        self._init_buffer_options(self.results_buffer)
-
-        # setting up playlist buffer
+        # setting up playlist buffer with bindings
         self.vim.command('topleft vertical 32 new')
-        self.playlist_buffer = self.vim.current.buffer
-        self.vim.command('nmap <buffer> <Enter> :call SpotifyOpenPlaylist()<CR>')
+        playlist_buffer = Buffer("playlists", self.vim.current.buffer)
+        playlist_buffer.set_data(playlists)
+        self.buffers.append(playlist_buffer)
+        self.vim.command('nmap <buffer> q :call SpotifyClose()<CR>')
+        self.vim.command('nmap <buffer> f :call SpotifySearch()<CR>')
+        self.vim.command('nmap <buffer> <Enter> :call SpotifyOpenResult({}, {})<CR>'.format(playlist_buffer.number, results_buffer.number))
 
-        self._init_buffer_options(self.playlist_buffer)
-        self._set_buffer_content(self.playlist_buffer, playlists)
-
-    def set_results(self, results):
-        self.vim.command('set switchbuf=useopen')
-        self.vim.command('sb {}'.format(self.results_buffer.number))
-        self._set_buffer_content(self.results_buffer, results)
+        return self.buffers
 
     def close(self):
-        self.vim.command('bd {}'.format(self.results_buffer.number))
-        self.vim.command('bd {}'.format(self.playlist_buffer.number))
+        for buffer in self.buffers:
+            self.vim.command('bd {}'.format(buffer.number))
 
     def query_input(self, text):
         self.vim.command('let user_input = input("{}: ")'.format(text))
