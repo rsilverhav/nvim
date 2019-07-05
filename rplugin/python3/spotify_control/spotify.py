@@ -85,9 +85,13 @@ class Spotify():
             url = resp["next"]
         return tracks_data
 
-    def play_track(self, track_id, context):
+    def play_track(self, track_id, context = None):
         track_uri = "spotify:track:{}".format(track_id)
-        data = { "context_uri": context, "offset": { "uri": track_uri}}
+        data = {}
+        if context:
+            data = { "context_uri": context, "offset": { "uri": track_uri}}
+        else:
+            data = { "uris": [track_uri] }
         resp = self.make_spotify_request("https://api.spotify.com/v1/me/player/play", "PUT", json.dumps(data), True)
         return resp
 
@@ -96,10 +100,16 @@ class Spotify():
         resp = self.make_spotify_request("https://api.spotify.com/v1/search?{}", "GET", data, True)
         return resp
 
-    def get_data(self, uri):
+    def make_request(self, uri, context = None):
         id = uri.split(':')[-1]
         if 'playlist' in uri:
             tracks_data = self.get_playlists_tracks_data(id)
-            tracks = list(map(lambda track_data: { 'title': track_data['track']['name'], 'uri': track_data['track']['uri'] }, tracks_data))
+            tracks = []
+            for track_data in tracks_data:
+                artists = ', '.join(list(map(lambda artist: artist['name'], track_data['track']['artists'])))
+                title = '{} - {}'.format(track_data['track']['name'], artists)
+                tracks.append({ 'title': title, 'uri': track_data['track']['uri'] })
             return tracks
+        elif 'track' in uri:
+            self.play_track(id)
         return {}

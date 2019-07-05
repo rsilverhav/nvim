@@ -6,12 +6,13 @@ class UIHandler():
         self.buffers = []
 
     def init_buffers(self, playlists):
+        self.vim.command('tab new')
         # setting up results buffer with bindings
         results_buffer = Buffer("results", self.vim.current.buffer)
         self.buffers.append(results_buffer)
-        self.vim.command('nmap <buffer> <Enter> :call SpotifyPlayResult()<CR>')
         self.vim.command('nmap <buffer> q :call SpotifyClose()<CR>')
         self.vim.command('nmap <buffer> f :call SpotifySearch()<CR>')
+        self.vim.command('nmap <buffer> <Enter> :call SpotifyOpenResult({}, {})<CR>'.format(results_buffer.number, results_buffer.number))
 
         # setting up playlist buffer with bindings
         self.vim.command('topleft vertical 32 new')

@@ -28,7 +28,6 @@ class SpotifyControl(object):
     def spotify_init(self, args, range):
         playlists_data = self.spotify.get_playlists_data()
         playlists = list(map(lambda playlist_data: { "title": playlist_data['name'], "uri": playlist_data['uri'] }, playlists_data))
-        self.vim.command('tab new')
         self.buffers = self.ui_handler.init_buffers(playlists)
 
     @pynvim.function('SpotifyOpenResult')
@@ -37,9 +36,11 @@ class SpotifyControl(object):
         target_buf = args[1]
         current_line = self.vim.eval('line(".")')
         row = self._get_buffer_by_number(source_buf).get_data_row(current_line)
-        new_data = self.spotify.get_data(row['uri'])
-        self._get_buffer_by_number(target_buf).set_data(new_data)
-
+        new_data = self.spotify.make_request(row['uri'])
+        if new_data:
+            self._get_buffer_by_number(target_buf).set_data(new_data)
+            self.vim.command('set switchbuf=useopen')
+            self.vim.command('sb {}'.format(target_buf))
     #@pynvim.function('SpotifyPlayResult')
     #def function_play_track(self, args):
     #    current_line = self.vim.eval('line(".")')
