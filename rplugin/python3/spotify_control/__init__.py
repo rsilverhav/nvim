@@ -9,8 +9,8 @@ class SpotifyControl(object):
         self.vim = vim
         self.buffers = []
         self.results_context = None
-        self.spotify = Spotify(vim)
-        self.ui_handler = UIHandler(vim)
+        self.spotify = None
+        self.ui_handler = None
 
     def _get_buffer_by_name(self, name):
         for buffer in self.buffers:
@@ -26,6 +26,9 @@ class SpotifyControl(object):
 
     @pynvim.command('SpotifyInit', range='', nargs='*', sync=True)
     def spotify_init(self, args, range):
+        self.buffers = []
+        self.spotify = Spotify(self.vim)
+        self.ui_handler = UIHandler(self.vim)
         playlists_data = self.spotify.get_playlists_data()
         playlists = list(map(lambda playlist_data: { "title": playlist_data['name'], "uri": playlist_data['uri'] }, playlists_data))
         self.buffers = self.ui_handler.init_buffers(playlists)
