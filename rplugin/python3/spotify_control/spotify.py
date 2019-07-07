@@ -101,9 +101,11 @@ class Spotify():
         return resp
 
     def get_artist(self, id):
-        url = 'https://api.spotify.com/v1/artists/{}/top-tracks'.format(id)
-        top_tracks_data = self.make_spotify_request(url, "GET", { 'country': 'SE' })
-        return { "top_tracks": top_tracks_data }
+        url_top_tracks = 'https://api.spotify.com/v1/artists/{}/top-tracks'.format(id)
+        top_tracks_data = self.make_spotify_request(url_top_tracks, "GET", { 'country': 'SE' })
+        url_albums = 'https://api.spotify.com/v1/artists/{}/albums'.format(id)
+        albums_data = self.make_spotify_request(url_albums, "GET", { 'country': 'SE' })
+        return { "top_tracks": top_tracks_data, "albums": albums_data }
 
     def get_album_tracks(self, id):
         url = 'https://api.spotify.com/v1/albums/{}/tracks'.format(id)
@@ -123,9 +125,7 @@ class Spotify():
         for artist in search_results_data['artists']['items']:
             search_results.append({ 'title': '  {}'.format(artist['name']), 'uri': artist['uri'] })
         search_results.append({ 'title': 'Albums' })
-        for album in search_results_data['albums']['items']:
-            title = '  {}  by {}'.format(album['name'], self.get_artists_names(album['artists']))
-            search_results.append({ 'title': title, 'uri': album['uri'] })
+        search_results.extend(self._parse_albums_data(search_results_data['albums']['items']))
         return search_results
 
     def _parse_tracks_data(self, tracks_data, prefix = ''):
@@ -140,6 +140,13 @@ class Spotify():
             tracks.append({ 'title': '{}{}'.format(prefix, title), 'uri': track_data['uri'] })
         return tracks
 
+    def _parse_albums_data(self, albums_data, prefix = ''):
+        albums = []
+        for album in albums_data:
+            title = '{}{}  by {}'.format(prefix, album['name'], self.get_artists_names(album['artists']))
+            albums.append({ 'title': title, 'uri': album['uri'] })
+        return albums
+
     def make_request(self, uri, context = None):
         id = uri.split(':')[-1]
         if 'playlist' in uri:
@@ -152,6 +159,8 @@ class Spotify():
             artist_data = self.get_artist(id)
             artist = [{'title': 'Tracks'}]
             artist.extend(self._parse_tracks_data(artist_data['top_tracks']['tracks'], '  '))
+            artist.append({'title': 'Albums'})
+            artist.extend(self._parse_albums_data(artist_data['albums']['items'], '  '))
             return artist
         elif 'album' in uri:
             album_tracks_data = self.get_album_tracks(id)
