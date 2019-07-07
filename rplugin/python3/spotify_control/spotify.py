@@ -46,7 +46,7 @@ class Spotify():
         f.write(new_tokens_string)
         f.close()
 
-    def make_spotify_request(self, url, method, params, retry_on_fail):
+    def make_spotify_request(self, url, method, params, retry_on_fail = True):
         tokens = self.get_tokens()
         resp = None
         if method == "POST":
@@ -67,12 +67,12 @@ class Spotify():
 
     def get_my_info(self):
         tokens = self.get_tokens()
-        resp = self.make_spotify_request("https://api.spotify.com/v1/me", "GET", {}, True)
+        resp = self.make_spotify_request("https://api.spotify.com/v1/me", "GET", {})
         print(resp)
 
     def get_playlists_data(self):
         tokens = self.get_tokens()
-        resp = self.make_spotify_request("https://api.spotify.com/v1/me/playlists", "GET", {}, True)
+        resp = self.make_spotify_request("https://api.spotify.com/v1/me/playlists", "GET", {})
         return resp["items"]
 
     def get_playlists_tracks_data(self, playlist_id):
@@ -80,7 +80,7 @@ class Spotify():
         url = "https://api.spotify.com/v1/playlists/{}/tracks".format(playlist_id)
         tracks_data = []
         while url != None:
-            resp = self.make_spotify_request(url, "GET", {}, True)
+            resp = self.make_spotify_request(url, "GET", {})
             tracks_data.extend(resp["items"])
             url = resp["next"]
         return tracks_data
@@ -92,24 +92,43 @@ class Spotify():
             data = { "context_uri": context, "offset": { "uri": track_uri}}
         else:
             data = { "uris": [track_uri] }
-        resp = self.make_spotify_request("https://api.spotify.com/v1/me/player/play", "PUT", json.dumps(data), True)
+        resp = self.make_spotify_request("https://api.spotify.com/v1/me/player/play", "PUT", json.dumps(data))
         return resp
 
     def search(self, query):
         data = { 'q': query, 'type': 'album,artist,playlist,track' }
-        resp = self.make_spotify_request("https://api.spotify.com/v1/search?{}", "GET", data, True)
+        resp = self.make_spotify_request("https://api.spotify.com/v1/search?{}", "GET", data)
         return resp
+
+    def get_artist(self, id):
+        url = 'https://api.spotify.com/v1/artists/{}/top-tracks'.format(id)
+        top_tracks_data = self.make_spotify_request(url, "GET", { 'country': 'SE' })
+        return { "top_tracks": top_tracks_data }
+
+    def _parse_tracks_data(self, tracks_data, prefix = ''):
+        tracks = []
+        for data in tracks_data:
+            if 'track' in data:
+                track_data = data['track']
+            else:
+                track_data = data
+            artists = ', '.join(list(map(lambda artist: artist['name'], track_data['artists'])))
+            title = '{} - {}'.format(track_data['name'], artists)
+            tracks.append({ 'title': '{}{}'.format(prefix, title), 'uri': track_data['uri'] })
+        return tracks
 
     def make_request(self, uri, context = None):
         id = uri.split(':')[-1]
         if 'playlist' in uri:
             tracks_data = self.get_playlists_tracks_data(id)
-            tracks = []
-            for track_data in tracks_data:
-                artists = ', '.join(list(map(lambda artist: artist['name'], track_data['track']['artists'])))
-                title = '{} - {}'.format(track_data['track']['name'], artists)
-                tracks.append({ 'title': title, 'uri': track_data['track']['uri'] })
+            tracks = self._parse_tracks_data(tracks_data)
             return tracks
         elif 'track' in uri:
             self.play_track(id)
+        elif 'artist' in uri:
+            artist_data = self.get_artist(id)
+            artist = [{'title': 'Tracks'}]
+            artist.extend(self._parse_tracks_data(artist_data['top_tracks']['tracks'], '  '))
+            return artist
+
         return {}

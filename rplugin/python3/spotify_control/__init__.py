@@ -36,18 +36,12 @@ class SpotifyControl(object):
         target_buf = args[1]
         current_line = self.vim.eval('line(".")')
         row = self._get_buffer_by_number(source_buf).get_data_row(current_line)
-        new_data = self.spotify.make_request(row['uri'])
-        if new_data:
-            self._get_buffer_by_number(target_buf).set_data(new_data)
-            self.vim.command('set switchbuf=useopen')
-            self.vim.command('sb {}'.format(target_buf))
-    #@pynvim.function('SpotifyPlayResult')
-    #def function_play_track(self, args):
-    #    current_line = self.vim.eval('line(".")')
-    #    current_index = current_line - 1
-    #    if current_index >= 0 and current_index < len(self.results_data):
-    #        track_id = self.results_data[current_index]['track']['id']
-    #        self.spotify.play_track(track_id, self.results_context)
+        if 'uri' in row:
+            new_data = self.spotify.make_request(row['uri'])
+            if new_data:
+                self._get_buffer_by_number(target_buf).set_data(new_data)
+                self.vim.command('set switchbuf=useopen')
+                self.vim.command('sb {}'.format(target_buf))
 
     @pynvim.function('SpotifyClose')
     def function_close(self, args):
@@ -56,5 +50,13 @@ class SpotifyControl(object):
     @pynvim.function('SpotifySearch')
     def function_search(self, args):
         search_query = self.ui_handler.query_input('Spotify search')
-        search_results = self.spotify.search(search_query)
-        self.ui_handler.set_results([json.dumps(search_results)])
+        search_results_data = self.spotify.search(search_query)
+        search_results = []
+        search_results.append({ 'title': 'Artists' })
+        #search_results.append({ 'title': json.dumps(search_results_data) })
+        for artist in search_results_data['artists']['items']:
+            search_results.append({ 'title': '  {}'.format(artist['name']), 'uri': artist['uri'] })
+        results_buffer = self._get_buffer_by_name('results')
+        results_buffer.set_data(search_results)
+        self.vim.command('set switchbuf=useopen')
+        self.vim.command('sb {}'.format(results_buffer.number))
