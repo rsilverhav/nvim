@@ -53,9 +53,12 @@ class SpotifyControl(object):
         search_results_data = self.spotify.search(search_query)
         search_results = []
         search_results.append({ 'title': 'Artists' })
-        #search_results.append({ 'title': json.dumps(search_results_data) })
         for artist in search_results_data['artists']['items']:
             search_results.append({ 'title': '  {}'.format(artist['name']), 'uri': artist['uri'] })
+        search_results.append({ 'title': 'Albums' })
+        for album in search_results_data['albums']['items']:
+            title = '  {}  by {}'.format(album['name'], self.spotify.get_artists_names(album['artists']))
+            search_results.append({ 'title': title, 'uri': album['uri'] })
         results_buffer = self._get_buffer_by_name('results')
         results_buffer.set_data(search_results)
         self.vim.command('set switchbuf=useopen')

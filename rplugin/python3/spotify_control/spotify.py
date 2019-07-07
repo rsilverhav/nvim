@@ -105,6 +105,15 @@ class Spotify():
         top_tracks_data = self.make_spotify_request(url, "GET", { 'country': 'SE' })
         return { "top_tracks": top_tracks_data }
 
+    def get_album_tracks(self, id):
+        url = 'https://api.spotify.com/v1/albums/{}/tracks'.format(id)
+        album_tracks = self.make_spotify_request(url, "GET", { 'limit': 50 })
+        return album_tracks['items']
+
+
+    def get_artists_names(self, data):
+        return ', '.join(list(map(lambda artist: artist['name'], data)))
+
     def _parse_tracks_data(self, tracks_data, prefix = ''):
         tracks = []
         for data in tracks_data:
@@ -112,7 +121,7 @@ class Spotify():
                 track_data = data['track']
             else:
                 track_data = data
-            artists = ', '.join(list(map(lambda artist: artist['name'], track_data['artists'])))
+            artists = self.get_artists_names(track_data['artists'])
             title = '{} - {}'.format(track_data['name'], artists)
             tracks.append({ 'title': '{}{}'.format(prefix, title), 'uri': track_data['uri'] })
         return tracks
@@ -130,5 +139,8 @@ class Spotify():
             artist = [{'title': 'Tracks'}]
             artist.extend(self._parse_tracks_data(artist_data['top_tracks']['tracks'], '  '))
             return artist
-
-        return {}
+        elif 'album' in uri:
+            album_tracks_data = self.get_album_tracks(id)
+            album_tracks = self._parse_tracks_data(album_tracks_data)
+            return album_tracks
+        return None
