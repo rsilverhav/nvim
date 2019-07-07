@@ -40,7 +40,10 @@ class SpotifyControl(object):
         current_line = self.vim.eval('line(".")')
         row = self._get_buffer_by_number(source_buf).get_data_row(current_line)
         if 'uri' in row:
-            new_data = self.spotify.make_request(row['uri'])
+            context = None
+            if 'context' in row:
+                context = row['context']
+            new_data = self.spotify.make_request(row['uri'], context)
             if new_data:
                 self._get_buffer_by_number(target_buf).set_data(new_data)
                 self.vim.command('set switchbuf=useopen')

@@ -89,7 +89,7 @@ class Spotify():
         track_uri = "spotify:track:{}".format(track_id)
         data = {}
         if context:
-            data = { "context_uri": context, "offset": { "uri": track_uri}}
+            data = { "context_uri": context, "offset": { "uri": track_uri }}
         else:
             data = { "uris": [track_uri] }
         resp = self.make_spotify_request("https://api.spotify.com/v1/me/player/play", "PUT", json.dumps(data))
@@ -125,10 +125,10 @@ class Spotify():
         for artist in search_results_data['artists']['items']:
             search_results.append({ 'title': '  {}'.format(artist['name']), 'uri': artist['uri'] })
         search_results.append({ 'title': 'Albums' })
-        search_results.extend(self._parse_albums_data(search_results_data['albums']['items']))
+        search_results.extend(self._parse_albums_data(search_results_data['albums']['items'], '  '))
         return search_results
 
-    def _parse_tracks_data(self, tracks_data, prefix = ''):
+    def _parse_tracks_data(self, tracks_data, prefix = '', context = None):
         tracks = []
         for data in tracks_data:
             if 'track' in data:
@@ -137,7 +137,10 @@ class Spotify():
                 track_data = data
             artists = self.get_artists_names(track_data['artists'])
             title = '{} - {}'.format(track_data['name'], artists)
-            tracks.append({ 'title': '{}{}'.format(prefix, title), 'uri': track_data['uri'] })
+            parsed_track = { 'title': '{}{}'.format(prefix, title), 'uri': track_data['uri'] }
+            if context:
+                parsed_track['context'] = context
+            tracks.append(parsed_track)
         return tracks
 
     def _parse_albums_data(self, albums_data, prefix = ''):
@@ -151,10 +154,10 @@ class Spotify():
         id = uri.split(':')[-1]
         if 'playlist' in uri:
             tracks_data = self.get_playlists_tracks_data(id)
-            tracks = self._parse_tracks_data(tracks_data)
+            tracks = self._parse_tracks_data(tracks_data, '', uri)
             return tracks
         elif 'track' in uri:
-            self.play_track(id)
+            self.play_track(id, context)
         elif 'artist' in uri:
             artist_data = self.get_artist(id)
             artist = [{'title': 'Tracks'}]
