@@ -114,6 +114,20 @@ class Spotify():
     def get_artists_names(self, data):
         return ', '.join(list(map(lambda artist: artist['name'], data)))
 
+    def get_search_results(self, search_query):
+        search_results_data = self.search(search_query)
+        search_results = []
+        search_results.append({ 'title': 'Tracks' })
+        search_results.extend(self._parse_tracks_data(search_results_data['tracks']['items'], '  '))
+        search_results.append({ 'title': 'Artists' })
+        for artist in search_results_data['artists']['items']:
+            search_results.append({ 'title': '  {}'.format(artist['name']), 'uri': artist['uri'] })
+        search_results.append({ 'title': 'Albums' })
+        for album in search_results_data['albums']['items']:
+            title = '  {}  by {}'.format(album['name'], self.get_artists_names(album['artists']))
+            search_results.append({ 'title': title, 'uri': album['uri'] })
+        return search_results
+
     def _parse_tracks_data(self, tracks_data, prefix = ''):
         tracks = []
         for data in tracks_data:
