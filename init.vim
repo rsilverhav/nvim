@@ -169,12 +169,12 @@ nnoremap <C-j> :tabprevious<CR>
 nnoremap <C-k> :tabnext<CR>
 nnoremap <C-g> :TSTypeDef<CR>
 nnoremap <Leader>t :CtrlPTS<CR>
-nnoremap <Leader>s :call OpenCssTsx()<CR>
 nnoremap <Leader>v :ALEFix prettier<CR>
 nnoremap <Leader>g :Gtabedit :<CR>:set previewwindow<CR>
 nnoremap <Leader>C :CtrlPBuffer<CR>
 nnoremap <Leader>m :call SeachMdn("")<CR>
 vnoremap <Leader>m :call SeachMdn(GetVisual())<CR>
+nnoremap <Leader>s :SpotifyInit<CR>
 nnoremap n nzz
 nnoremap N Nzz
 nnoremap Ö :

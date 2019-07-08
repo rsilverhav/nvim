@@ -167,6 +167,6 @@ class Spotify():
             return artist
         elif 'album' in uri:
             album_tracks_data = self.get_album_tracks(id)
-            album_tracks = self._parse_tracks_data(album_tracks_data)
+            album_tracks = self._parse_tracks_data(album_tracks_data, '', uri)
             return album_tracks
         return None
