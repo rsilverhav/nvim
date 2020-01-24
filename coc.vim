@@ -84,6 +84,8 @@ nmap <leader>ac  <Plug>(coc-codeaction)
 " Fix autofix problem of current line
 nmap <leader>qf  <Plug>(coc-fix-current)
 
+nmap <leader>qi  <Plug>(coc-action-doHover)
+
 " Use `:Format` for format current buffer
 command! -nargs=0 Format :call CocAction('format')
 
@@ -99,3 +101,8 @@ let g:lightline = {
       \   'cocstatus': 'coc#status'
       \ },
       \ }
+
+command! -nargs=0 Prettier :CocCommand prettier.formatFile
+
+" Custom keybinds
+nnoremap <Leader>C :CocCommand<CR>

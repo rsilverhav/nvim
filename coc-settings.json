@@ -1,0 +1,6 @@
+{
+  "suggest.floatEnable": true,
+  "suggest.enablePreview": true,
+  "coc.preferences.formatOnSaveFiletypes": ["css", "Markdown", "javascript", "javascriptreact", "typescript", "typescriptreact", "rust"],
+  "flutter.provider.hot-reload": true
+}

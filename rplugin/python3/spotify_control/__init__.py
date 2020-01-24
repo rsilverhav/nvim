@@ -35,6 +35,7 @@ class SpotifyControl(object):
 
     @pynvim.function('SpotifyOpenResult')
     def function_open_result(self, args):
+        self.vim.out_write('calling OpenResult\n')
         source_buf = args[0]
         target_buf = args[1]
         current_line = self.vim.eval('line(".")')
@@ -48,6 +49,17 @@ class SpotifyControl(object):
                 self._get_buffer_by_number(target_buf).set_data(new_data)
                 self.vim.command('set switchbuf=useopen')
                 self.vim.command('sb {}'.format(target_buf))
+
+    @pynvim.function('SpotifyPlayMultiple')
+    def function_play_multiple(self, args):
+        source_buf = args[0]
+        target_buf = args[1]
+        self.vim.out_write('calling func\n')
+        [line_start, col_start] = self.vim.eval('getpos("\'<")[1:2]')
+        [line_end, col_end] = self.vim.eval('getpos("\'>")[1:2]')
+        rows = self._get_buffer_by_number(source_buf).get_data_rows(line_start, line_end)
+        self.vim.out_write(json.dumps(rows) + '\n')
+
 
     @pynvim.function('SpotifyClose')
     def function_close(self, args):

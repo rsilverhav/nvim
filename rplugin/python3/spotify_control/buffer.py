@@ -29,3 +29,8 @@ class Buffer():
         index = line_nr - 1
         if index >= 0 and index < len(self.data):
             return self.data[index]
+
+    def get_data_rows(self, line_start, line_end):
+        index_start = line_start - 1
+        if index_start >= 0 and line_end >= 0 and index_start < len(self.data) and line_end < len(self.data):
+            return self.data[index_start:line_end]

@@ -3,6 +3,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 Plug 'HerringtonDarkholme/yats.vim'
 Plug 'mxw/vim-jsx'
 Plug 'pangloss/vim-javascript'
+Plug 'leafgarland/typescript-vim'
 Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
 
 Plug 'mhartington/oceanic-next'
@@ -13,8 +14,15 @@ Plug 'ctrlpvim/ctrlp.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'w0rp/ale'
 Plug 'AlessandroYorba/Sierra'
+Plug 'dart-lang/dart-vim-plugin'
 
 call plug#end()
+
+"
+" Memory
+"
+set mmp=5000
+
 
 "
 " Util
@@ -85,9 +93,18 @@ function! Ctrlf(text)
     let query = input('Search: ')
   endif
   if query != ""
-    silent execute "grep! -rI --exclude-dir={node_modules,build,static,.git} --exclude=stats.json " . shellescape(query) . " ."
+    silent execute "grep! -rI --exclude-dir={node_modules,build,static,.git,ios} --exclude=stats.json " . shellescape(query) . " ."
     copen
     redraw!
+  endif
+endfunction
+
+function! FindAndReplace(query)
+  let query = input('Search: ', a:query)
+  let replace = input('Replace with: ')
+  if query != ""
+    let cmd = "!grep --exclude-dir=\"node_modules,.git\" -rIl \"" . query . "\" . | xargs sed -i 's/" . query . "/" . replace . "/g'"
+    execute cmd
   endif
 endfunction
 
@@ -162,6 +179,8 @@ nnoremap - $
 vnoremap - $
 vnoremap <C-f> :call Ctrlf(GetVisual())<CR>
 nnoremap <C-f> :call Ctrlf("")<CR>
+nnoremap <C-y> :call FindAndReplace("")<CR>
+vnoremap <C-y> :call FindAndReplace(GetVisual())<CR>
 nnoremap <Leader>* :call Ctrlf(expand("<cword>"))<CR>
 map <Leader> <Plug>(easymotion-prefix)
 nnoremap <C-t> :tabnew<CR>
@@ -169,9 +188,8 @@ nnoremap <C-j> :tabprevious<CR>
 nnoremap <C-k> :tabnext<CR>
 nnoremap <C-g> :TSTypeDef<CR>
 nnoremap <Leader>t :CtrlPTS<CR>
-nnoremap <Leader>v :ALEFix prettier<CR>
+nnoremap <Leader>v :DartFmt -l 120<CR>
 nnoremap <Leader>g :Gtabedit :<CR>:set previewwindow<CR>
-nnoremap <Leader>C :CtrlPBuffer<CR>
 nnoremap <Leader>m :call SeachMdn("")<CR>
 vnoremap <Leader>m :call SeachMdn(GetVisual())<CR>
 nnoremap <Leader>s :SpotifyInit<CR>
@@ -182,6 +200,7 @@ vnoremap Ö :
 map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
       \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
       \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
+tnoremap <Esc> <C-\><C-n>
 
 imap jk <ESC>
 
