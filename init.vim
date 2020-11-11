@@ -4,17 +4,20 @@ Plug 'HerringtonDarkholme/yats.vim'
 Plug 'mxw/vim-jsx'
 Plug 'pangloss/vim-javascript'
 Plug 'leafgarland/typescript-vim'
-Plug 'neoclide/coc.nvim', {'tag': '*', 'do': { -> coc#util#install()}}
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
-Plug 'mhartington/oceanic-next'
 Plug 'easymotion/vim-easymotion'
 Plug 'tpope/vim-fugitive'
 Plug 'scrooloose/nerdtree'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'w0rp/ale'
-Plug 'AlessandroYorba/Sierra'
 Plug 'dart-lang/dart-vim-plugin'
+Plug 'jparise/vim-graphql'
+
+Plug 'cocopon/iceberg.vim'
+"Plug 'AlessandroYorba/Sierra'
+"Plug 'mhartington/oceanic-next'
 
 call plug#end()
 
@@ -50,6 +53,10 @@ set shiftwidth=2
 set expandtab
 set smartindent
 
+"
+" Splits
+"
+set splitright
 
 "
 "
@@ -57,18 +64,19 @@ set smartindent
 "
 syntax on
 "color OceanicNext
-let g:sierra_Sunset = 1
-colorscheme sierra 
+"let g:sierra_Sunset = 1
+"colorscheme sierra 
+colorscheme iceberg
 set cursorline
-highlight SpellBad cterm=None
-highlight Label ctermfg=Gray
-highlight Statement ctermfg=108
-highlight preproc ctermfg=Gray
-highlight Search cterm=None ctermbg=146 ctermfg=Black
-highlight CocHighlightText ctermbg=240
-highlight CocHighlightRead ctermbg=240
-highlight CocHighlightWrite ctermbg=240
-highlight Comment ctermfg=242
+"highlight SpellBad cterm=None
+"highlight Label ctermfg=Gray
+"highlight Statement ctermfg=108
+"highlight preproc ctermfg=Gray
+"highlight Search cterm=None ctermbg=146 ctermfg=Black
+"highlight CocHighlightText ctermbg=240
+"highlight CocHighlightRead ctermbg=240
+"highlight CocHighlightWrite ctermbg=240
+"highlight Comment ctermfg=242
 
 
 "
@@ -93,7 +101,7 @@ function! Ctrlf(text)
     let query = input('Search: ')
   endif
   if query != ""
-    silent execute "grep! -rI --exclude-dir={node_modules,build,static,.git,ios} --exclude=stats.json " . shellescape(query) . " ."
+    silent execute "grep! -rI --exclude-dir={node_modules,functions/node_modules,build,static,.git,ios} --exclude=stats.json " . shellescape(query) . " ."
     copen
     redraw!
   endif
@@ -207,5 +215,5 @@ imap jk <ESC>
 "
 " Source
 "
-source ~/.config/nvim/secrets.vim
+" source ~/.config/nvim/secrets.vim
 source ~/.config/nvim/coc.vim

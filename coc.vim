@@ -106,3 +106,4 @@ command! -nargs=0 Prettier :CocCommand prettier.formatFile
 
 " Custom keybinds
 nnoremap <Leader>C :CocCommand<CR>
+nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>

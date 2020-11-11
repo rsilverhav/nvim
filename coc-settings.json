@@ -2,5 +2,5 @@
   "suggest.floatEnable": true,
   "suggest.enablePreview": true,
   "coc.preferences.formatOnSaveFiletypes": ["css", "Markdown", "javascript", "javascriptreact", "typescript", "typescriptreact", "rust"],
-  "flutter.provider.hot-reload": true
+  "python.jediPath": "/usr/local/lib/python3.8/site-packages"
 }
