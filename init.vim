@@ -165,7 +165,7 @@ let g:deoplete#enable_at_startup = 1
 "
 " FZF
 "
-"let g:fzf_layout = { 'down': '20%' }
+au WinLeave * if (&ft ==? "fzf") | q | endif
 
 "
 " Keybinds
