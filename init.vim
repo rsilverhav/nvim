@@ -5,19 +5,17 @@ Plug 'mxw/vim-jsx'
 Plug 'pangloss/vim-javascript'
 Plug 'leafgarland/typescript-vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-
 Plug 'easymotion/vim-easymotion'
 Plug 'tpope/vim-fugitive'
 Plug 'scrooloose/nerdtree'
-Plug 'ctrlpvim/ctrlp.vim'
+"Plug 'ctrlpvim/ctrlp.vim'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'vim-airline/vim-airline'
 Plug 'w0rp/ale'
 Plug 'dart-lang/dart-vim-plugin'
 Plug 'jparise/vim-graphql'
 
 Plug 'cocopon/iceberg.vim'
-"Plug 'AlessandroYorba/Sierra'
-"Plug 'mhartington/oceanic-next'
 
 call plug#end()
 
@@ -63,21 +61,8 @@ set splitright
 " Colors
 "
 syntax on
-"color OceanicNext
-"let g:sierra_Sunset = 1
-"colorscheme sierra 
 colorscheme iceberg
 set cursorline
-"highlight SpellBad cterm=None
-"highlight Label ctermfg=Gray
-"highlight Statement ctermfg=108
-"highlight preproc ctermfg=Gray
-"highlight Search cterm=None ctermbg=146 ctermfg=Black
-"highlight CocHighlightText ctermbg=240
-"highlight CocHighlightRead ctermbg=240
-"highlight CocHighlightWrite ctermbg=240
-"highlight Comment ctermfg=242
-
 
 "
 " Helper functions
@@ -129,13 +114,13 @@ command! Config vsp ~/.config/nvim/init.vim
 "
 " CtrlP config
 "
-let g:ctrlp_working_path_mode = 'ra'
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip,node_modules
-let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$|node_modules'
-let g:ctrlp_by_filename = 1
-let g:ctrlp_switch_buffer = 'ET'
-let g:ctrlp_extensions = ['ts']
-command! CtrlPTS call ctrlp#init(ctrlp#ts#id())
+" let g:ctrlp_working_path_mode = 'ra'
+" set wildignore+=*/tmp/*,*.so,*.swp,*.zip,node_modules
+" let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$|node_modules'
+" let g:ctrlp_by_filename = 1
+" let g:ctrlp_switch_buffer = 'ET'
+" let g:ctrlp_extensions = ['ts']
+" command! CtrlPTS call ctrlp#init(ctrlp#ts#id())
 
 
 "
@@ -177,11 +162,16 @@ autocmd filetype qf wincmd J
 let g:deoplete#enable_at_startup = 1
 
 "
+" FZF
+"
+"let g:fzf_layout = { 'down': '20%' }
+
+"
 " Keybinds
 "
 let mapleader=" "
 nnoremap <Leader>r :!python3 %<CR>
-nnoremap <Leader>c :CtrlP<CR>
+nnoremap <silent> <Leader>c :call fzf#run({'source': 'rg --files --follow --hidden --glob "!{node_modules/*,.git/*}" --no-ignore-vcs --vimgrep', 'sink': 'e', 'window': {'width': 0.9, 'height': 0.6}})<CR>
 nnoremap ¬¥ $
 nnoremap - $
 vnoremap - $
