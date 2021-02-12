@@ -10,6 +10,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'scrooloose/nerdtree'
 "Plug 'ctrlpvim/ctrlp.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'w0rp/ale'
 Plug 'dart-lang/dart-vim-plugin'
@@ -171,7 +172,7 @@ let g:deoplete#enable_at_startup = 1
 "
 let mapleader=" "
 nnoremap <Leader>r :!python3 %<CR>
-nnoremap <silent> <Leader>c :call fzf#run({'source': 'rg --files --follow --hidden --glob "!{node_modules/*,.git/*}" --no-ignore-vcs --vimgrep', 'sink': 'e', 'window': {'width': 0.9, 'height': 0.6}})<CR>
+nnoremap <silent> <Leader>c :Files<CR>
 nnoremap ¬¥ $
 nnoremap - $
 vnoremap - $
