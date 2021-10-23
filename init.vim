@@ -16,7 +16,10 @@ Plug 'w0rp/ale'
 Plug 'dart-lang/dart-vim-plugin'
 Plug 'jparise/vim-graphql'
 
+Plug 'leafOfTree/vim-svelte-plugin'
+
 Plug 'cocopon/iceberg.vim'
+Plug 'NLKNguyen/papercolor-theme'
 
 call plug#end()
 
@@ -65,6 +68,10 @@ syntax on
 colorscheme iceberg
 set cursorline
 
+hi CursorLine ctermbg=237
+hi Visual ctermbg=239
+hi CocErrorHighligh ctermfg=1 ctermbg=203 guifg=#e27878 guibg=#161821
+
 "
 " Helper functions
 "
@@ -108,6 +115,16 @@ function! SeachMdn(text)
     let query = input('Search MDN: ')
   endif
   silent execute "!/Applications/Google\\\ Chrome.app/Contents/MacOS/Google\\\ Chrome \"https://developer.mozilla.org/en-US/search?q=" . query . "\""
+endfunction
+
+function! CreateReactFC()
+  let name = expand("%:t:r")
+  execute "normal! iimport React from 'react'\n\ninterface Props {}\n\nexport const \<C-r>=name\<CR>: React.FC<Props> = () => {\n return\n}\<Esc>"
+endfunction
+
+function! OpenTypescriptPlayground()
+  vs /Users/robin/dev/flexime_github/scripts/ts_playground/index.ts
+  nnoremap <buffer> <leader>r :!yarn --cwd /Users/robin/dev/flexime_github/scripts/ts_playground start<cr>
 endfunction
 
 command! Config vsp ~/.config/nvim/init.vim
@@ -155,6 +172,14 @@ let g:ale_fix_on_save=1
 autocmd FileType nerdtree setlocal nolist
 autocmd FileType typescript setlocal completeopt+=menu,preview
 autocmd filetype qf wincmd J
+autocmd User EasyMotionPromptBegin silent! CocDisable
+autocmd User EasyMotionPromptEnd silent! CocEnable
+
+
+"
+" CoC
+"
+nnoremap <Leader>d :CocList diagnostics<CR>
 
 
 "
@@ -166,6 +191,17 @@ let g:deoplete#enable_at_startup = 1
 " FZF
 "
 au WinLeave * if (&ft ==? "fzf") | q | endif
+
+"
+" Copy to clipboard
+"
+set clipboard+=unnamedplus
+
+"
+" Svelte
+"
+let g:vim_svelte_plugin_load_full_syntax = 1
+let g:vim_svelte_plugin_use_typescript = 1
 
 "
 " Keybinds
@@ -192,11 +228,12 @@ nnoremap <Leader>g :Gtabedit :<CR>:set previewwindow<CR>
 nnoremap <Leader>m :call SeachMdn("")<CR>
 vnoremap <Leader>m :call SeachMdn(GetVisual())<CR>
 nnoremap <Leader>s :SpotifyInit<CR>
+nnoremap <Esc><Esc> :noh<CR>
 nnoremap n nzz
 nnoremap N Nzz
 nnoremap Ö :
 vnoremap Ö :
-map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
+map <Leader>[ :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
       \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
       \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 tnoremap <Esc> <C-\><C-n>

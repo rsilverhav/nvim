@@ -1,6 +1,7 @@
 {
   "suggest.floatEnable": true,
   "suggest.enablePreview": true,
-  "coc.preferences.formatOnSaveFiletypes": ["css", "Markdown", "javascript", "javascriptreact", "typescript", "typescriptreact", "rust"],
-  "python.jediPath": "/usr/local/lib/python3.8/site-packages"
+  "coc.preferences.formatOnSaveFiletypes": ["css", "Markdown", "javascript", "javascriptreact", "typescript", "typescriptreact", "rust", "svelte"],
+  "python.jediPath": "/usr/local/lib/python3.8/site-packages",
+  "svelte.enable-ts-plugin": true
 }
