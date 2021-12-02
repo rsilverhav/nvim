@@ -94,7 +94,7 @@ function! Ctrlf(text)
     let query = input('Search: ')
   endif
   if query != ""
-    silent execute "grep! -rI --exclude-dir={node_modules,functions/node_modules,build,static,.git,ios} --exclude=stats.json " . shellescape(query) . " ."
+    silent execute "grep! -rI --exclude-dir={node_modules,functions/node_modules,build,static,.git,ios,__sapper__} --exclude=stats.json " . shellescape(query) . " ."
     copen
     redraw!
   endif
@@ -120,6 +120,11 @@ endfunction
 function! CreateReactFC()
   let name = expand("%:t:r")
   execute "normal! iimport React from 'react'\n\ninterface Props {}\n\nexport const \<C-r>=name\<CR>: React.FC<Props> = () => {\n return\n}\<Esc>"
+endfunction
+
+function! CreateSvelteComp()
+  let name = expand("%:t:r")
+  execute "normal! i<script lang=\"ts\">\n</script>\n\n<div>\ntest\n</div>\n\n<style>\n</style>\<Esc>"
 endfunction
 
 function! OpenTypescriptPlayground()
@@ -224,7 +229,6 @@ nnoremap <C-k> :tabnext<CR>
 nnoremap <C-g> :TSTypeDef<CR>
 nnoremap <Leader>t :CtrlPTS<CR>
 nnoremap <Leader>v :DartFmt -l 120<CR>
-nnoremap <Leader>g :Gtabedit :<CR>:set previewwindow<CR>
 nnoremap <Leader>m :call SeachMdn("")<CR>
 vnoremap <Leader>m :call SeachMdn(GetVisual())<CR>
 nnoremap <Leader>s :SpotifyInit<CR>
