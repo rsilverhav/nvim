@@ -232,6 +232,8 @@ nnoremap <Leader>v :DartFmt -l 120<CR>
 nnoremap <Leader>m :call SeachMdn("")<CR>
 vnoremap <Leader>m :call SeachMdn(GetVisual())<CR>
 nnoremap <Leader>s :SpotifyInit<CR>
+nnoremap <Leader>b :Buffers<CR>
+nnoremap <Leader>n :NERDTreeFind<CR>
 nnoremap <Esc><Esc> :noh<CR>
 nnoremap n nzz
 nnoremap N Nzz
