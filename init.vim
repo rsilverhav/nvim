@@ -1,50 +1,30 @@
 call plug#begin('~/.local/share/nvim/plugged')
 
-Plug 'HerringtonDarkholme/yats.vim'
-Plug 'mxw/vim-jsx'
-Plug 'pangloss/vim-javascript'
-Plug 'leafgarland/typescript-vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'easymotion/vim-easymotion'
 Plug 'tpope/vim-fugitive'
 Plug 'scrooloose/nerdtree'
-"Plug 'ctrlpvim/ctrlp.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'vim-airline/vim-airline'
-Plug 'w0rp/ale'
 Plug 'dart-lang/dart-vim-plugin'
 Plug 'jparise/vim-graphql'
+Plug 'tpope/vim-surround'
+Plug 'pantharshit00/vim-prisma'
 
 Plug 'leafOfTree/vim-svelte-plugin'
 
 Plug 'cocopon/iceberg.vim'
 Plug 'NLKNguyen/papercolor-theme'
 
+Plug '/Users/robinsilverhav/dev/vim-plugins/vim-spotify-ctrl'
+
 call plug#end()
-
-"
-" Memory
-"
-set mmp=5000
-
 
 "
 " Util
 "
-set mouse=a
 set number
-set backspace=indent,eol,start
-set list
-set hlsearch
-
-"
-"
-" File tab completion
-"
-set wildmode=longest,list,full
-set wildmenu
-set wildignorecase
 
 
 "
@@ -64,18 +44,17 @@ set splitright
 "
 " Colors
 "
-syntax on
 colorscheme iceberg
 set cursorline
 
 hi CursorLine ctermbg=237
 hi Visual ctermbg=239
 hi CocErrorHighligh ctermfg=1 ctermbg=203 guifg=#e27878 guibg=#161821
+hi CocSearch ctermfg=120
 
 "
 " Helper functions
 "
-
 function! GetVisual()
   let [line_start, column_start] = getpos("'<")[1:2]
   let [line_end, column_end] = getpos("'>")[1:2]
@@ -128,33 +107,17 @@ function! CreateSvelteComp()
 endfunction
 
 function! OpenTypescriptPlayground()
-  vs /Users/robin/dev/flexime_github/scripts/ts_playground/index.ts
-  nnoremap <buffer> <leader>r :!yarn --cwd /Users/robin/dev/flexime_github/scripts/ts_playground start<cr>
+  vs /Users/robinsilverhav/dev/scripts/ts_testing_ground/index.ts
+  nnoremap <buffer> <leader>r :!yarn --cwd /Users/robinsilverhav/dev/scripts/ts_testing_ground start<cr>
 endfunction
 
 command! Config vsp ~/.config/nvim/init.vim
-
-"
-" CtrlP config
-"
-" let g:ctrlp_working_path_mode = 'ra'
-" set wildignore+=*/tmp/*,*.so,*.swp,*.zip,node_modules
-" let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$|node_modules'
-" let g:ctrlp_by_filename = 1
-" let g:ctrlp_switch_buffer = 'ET'
-" let g:ctrlp_extensions = ['ts']
-" command! CtrlPTS call ctrlp#init(ctrlp#ts#id())
 
 
 "
 " NERDTree config
 "
 let NERDTreeChDirMode=2
-
-if !has('gui_running')
-  let g:NERDTreeDirArrowExpandable = "+"
-  let g:NERDTreeDirArrowCollapsible = "~"
-endif
 
 
 "
@@ -164,12 +127,6 @@ endif
 let g:airline#parts#ffenc#skip_expected_string='utf-8[unix]'
 let g:airline_section_b = ''
 
-
-"
-" ALE config
-"
-let b:ale_fixers = {'typescript': ['prettier']}
-let g:ale_fix_on_save=1
 
 "
 " Autocmds
@@ -184,13 +141,8 @@ autocmd User EasyMotionPromptEnd silent! CocEnable
 "
 " CoC
 "
-nnoremap <Leader>d :CocList diagnostics<CR>
+nnoremap <Leader>D :CocList diagnostics<CR>
 
-
-"
-" Typescript config
-"
-let g:deoplete#enable_at_startup = 1
 
 "
 " FZF
@@ -214,11 +166,9 @@ let g:vim_svelte_plugin_use_typescript = 1
 let mapleader=" "
 nnoremap <Leader>r :!python3 %<CR>
 nnoremap <silent> <Leader>c :Files<CR>
-nnoremap ¬¥ $
-nnoremap - $
-vnoremap - $
 vnoremap <C-f> :call Ctrlf(GetVisual())<CR>
 nnoremap <C-f> :call Ctrlf("")<CR>
+"nnoremap <C-f> :Rg<CR>
 nnoremap <C-y> :call FindAndReplace("")<CR>
 vnoremap <C-y> :call FindAndReplace(GetVisual())<CR>
 nnoremap <Leader>* :call Ctrlf(expand("<cword>"))<CR>
@@ -251,3 +201,4 @@ imap jk <ESC>
 "
 " source ~/.config/nvim/secrets.vim
 source ~/.config/nvim/coc.vim
+source ~/.config/nvim/spotify.vim
