@@ -11,13 +11,16 @@ Plug 'dart-lang/dart-vim-plugin'
 Plug 'jparise/vim-graphql'
 Plug 'tpope/vim-surround'
 Plug 'pantharshit00/vim-prisma'
+Plug 'prettier/vim-prettier', {
+  \ 'do': 'yarn install --frozen-lockfile --production',
+  \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'svelte', 'yaml', 'html'] }
 
 Plug 'leafOfTree/vim-svelte-plugin'
 
 Plug 'cocopon/iceberg.vim'
 Plug 'NLKNguyen/papercolor-theme'
 
-Plug '/Users/robinsilverhav/dev/vim-plugins/vim-spotify-ctrl'
+Plug '/Users/robinsilverhav/dev/vim-plugins/vim-spotify-ctrl' 
 
 call plug#end()
 
@@ -159,6 +162,12 @@ set clipboard+=unnamedplus
 "
 let g:vim_svelte_plugin_load_full_syntax = 1
 let g:vim_svelte_plugin_use_typescript = 1
+
+"
+" Prettier
+"
+let g:prettier#autoformat = 1
+let g:prettier#autoformat_require_pragma = 0
 
 "
 " Keybinds
