@@ -29,6 +29,11 @@ call plug#end()
 "
 set number
 
+"
+" Autocomplete cmds
+"
+set wildmode=longest,list,full
+
 
 "
 " Tabs to spaces
