@@ -171,6 +171,7 @@ EOF
 nnoremap <silent> <Leader>db <Cmd>lua require('dap').toggle_breakpoint()<CR>
 nnoremap <silent> <Leader>dB <Cmd>lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>
 nnoremap <silent> <Leader>dK <Cmd>lua require('dapui').eval()<CR>
+vnoremap <silent> <Leader>dK <Cmd>lua require('dapui').eval()<CR>
 nnoremap <silent> <Leader>da <Cmd>lua require'dap'.disconnect({ terminateDebuggee = true })<CR>
 
 nnoremap <silent> <F1> <Cmd>lua require'dap'.continue()<CR>
