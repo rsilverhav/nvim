@@ -22,6 +22,15 @@ Plug 'NLKNguyen/papercolor-theme'
 
 Plug '/Users/robinsilverhav/dev/vim-plugins/vim-spotify-ctrl' 
 
+" DAP
+Plug 'mfussenegger/nvim-dap'
+Plug 'mxsdev/nvim-dap-vscode-js'
+Plug 'microsoft/vscode-js-debug', { 'tag': 'v1.74.1', 'do': 'npm install --legacy-peer-deps && npm run compile' }
+Plug 'rcarriga/nvim-dap-ui'
+Plug 'nvim-treesitter/nvim-treesitter'
+Plug 'theHamsta/nvim-dap-virtual-text'
+
+
 call plug#end()
 
 "
@@ -216,3 +225,4 @@ imap jk <ESC>
 " source ~/.config/nvim/secrets.vim
 source ~/.config/nvim/coc.vim
 source ~/.config/nvim/spotify.vim
+source ~/.config/nvim/dap.vim
