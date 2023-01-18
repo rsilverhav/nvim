@@ -15,6 +15,18 @@ for _, language in ipairs { "typescript", "javascript" } do
       {
         type = "pwa-node",
         request = "launch",
+        name = "Launch file (ts-node)",
+        runtimeExecutable = "node",
+        runtimeArgs = {
+          "./node_modules/ts-node/dist/bin.js",
+        },
+        program = "${file}",
+        cwd = "${workspaceFolder}",
+        rootPath = "${workspaceFolder}",
+      },
+      {
+        type = "pwa-node",
+        request = "launch",
         name = "Launch file",
         program = "${file}",
         cwd = "${workspaceFolder}",
@@ -35,6 +47,8 @@ for _, language in ipairs { "typescript", "javascript" } do
         runtimeArgs = {
           "./node_modules/jest/bin/jest.js",
           "--runInBand",
+          "--config",
+          "jest.config.js"
         },
         rootPath = "${workspaceFolder}",
         cwd = "${workspaceFolder}",
@@ -154,6 +168,12 @@ EOF
 "
 " Keybinds
 "
-nnoremap <Leader>db :lua require('dap').toggle_breakpoint()<CR>
-nnoremap <Leader>dc :lua require('dap').continue()<CR>
-nnoremap <Leader>dK :lua require('dapui').eval()<CR>
+nnoremap <silent> <Leader>db <Cmd>lua require('dap').toggle_breakpoint()<CR>
+nnoremap <silent> <Leader>dB <Cmd>lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>
+nnoremap <silent> <Leader>dK <Cmd>lua require('dapui').eval()<CR>
+nnoremap <silent> <Leader>da <Cmd>lua require'dap'.disconnect({ terminateDebuggee = true })<CR>
+
+nnoremap <silent> <F1> <Cmd>lua require'dap'.continue()<CR>
+nnoremap <silent> <F2> <Cmd>lua require'dap'.step_over()<CR>
+nnoremap <silent> <F3> <Cmd>lua require'dap'.step_into()<CR>
+nnoremap <silent> <F4> <Cmd>lua require'dap'.step_out()<CR>
