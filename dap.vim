@@ -1,4 +1,24 @@
 "
+" Helper functions
+"
+function! StartDebugging()
+  let g:dap_tab_before_debugging = tabpagenr()
+  let l:dap_debug_start_file = expand("%")
+
+  execute 'tabnew' l:dap_debug_start_file
+
+  " Open new tab for debugging
+  let g:dap_debug_tab = tabpagenr()
+  lua require'dap'.continue()
+endfunction
+
+function! StopDebugging()
+  lua require'dap'.disconnect({ terminateDebuggee = true })
+  execute 'tabnext' g:dap_tab_before_debugging
+  execute 'tabclose' g:dap_debug_tab
+endfunction
+
+"
 " DAP
 "
 lua << EOF
@@ -49,6 +69,22 @@ for _, language in ipairs { "typescript", "javascript" } do
           "--runInBand",
           "--config",
           "jest.config.js"
+        },
+        rootPath = "${workspaceFolder}",
+        cwd = "${workspaceFolder}",
+        console = "integratedTerminal",
+        internalConsoleOptions = "neverOpen",
+      },
+      {
+        type = "pwa-node",
+        request = "launch",
+        name = "Debug Jasmine Tests",
+        runtimeExecutable = "node",
+        runtimeArgs = {
+          "node_modules/jasmine-ts/lib/index.js",
+          "--config",
+          "./jasmine.json",
+          "NODE_ENV=test"
         },
         rootPath = "${workspaceFolder}",
         cwd = "${workspaceFolder}",
@@ -153,17 +189,19 @@ require('nvim-treesitter').setup()
 -- DAP Listeners
 local dap, dapui = require("dap"), require("dapui")
 dap.listeners.after.event_initialized["dapui_config"] = function()
+  -- vim.fn.StartDebugging()
   dapui.open()
 end
 dap.listeners.before.event_terminated["dapui_config"] = function()
+  -- vim.fn.StopDebugging()
   dapui.close()
 end
 dap.listeners.before.event_exited["dapui_config"] = function()
+  -- vim.fn.StopDebugging()
   dapui.close()
 end
 
 EOF
-
 
 "
 " Keybinds
@@ -172,7 +210,8 @@ nnoremap <silent> <Leader>db <Cmd>lua require('dap').toggle_breakpoint()<CR>
 nnoremap <silent> <Leader>dB <Cmd>lua require'dap'.set_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>
 nnoremap <silent> <Leader>dK <Cmd>lua require('dapui').eval()<CR>
 vnoremap <silent> <Leader>dK <Cmd>lua require('dapui').eval()<CR>
-nnoremap <silent> <Leader>da <Cmd>lua require'dap'.disconnect({ terminateDebuggee = true })<CR>
+nnoremap <silent> <Leader>da <Cmd>lua require('dap').disconnect({ terminateDebuggee = true })<CR>
+nnoremap <silent> <Leader>ds :call StartDebugging()<CR>
 
 nnoremap <silent> <F1> <Cmd>lua require'dap'.continue()<CR>
 nnoremap <silent> <F2> <Cmd>lua require'dap'.step_over()<CR>

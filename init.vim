@@ -191,7 +191,6 @@ nnoremap <Leader>r :!python3 %<CR>
 nnoremap <silent> <Leader>c :Files<CR>
 vnoremap <C-f> :call Ctrlf(GetVisual())<CR>
 nnoremap <C-f> :call Ctrlf("")<CR>
-"nnoremap <C-f> :Rg<CR>
 nnoremap <C-y> :call FindAndReplace("")<CR>
 vnoremap <C-y> :call FindAndReplace(GetVisual())<CR>
 nnoremap <Leader>* :call Ctrlf(expand("<cword>"))<CR>
