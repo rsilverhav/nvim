@@ -1,6 +1,9 @@
 {
   "suggest.floatEnable": true,
   "suggest.enablePreview": true,
+  "coc.preferences.formatOnSaveFiletypes": [
+    "cpp"
+  ],
   "python.jediPath": "/usr/local/lib/python3.8/site-packages",
   "svelte.enable-ts-plugin": true
 }

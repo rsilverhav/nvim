@@ -182,8 +182,8 @@ require("dapui").setup({
 })
 
 -- Virtual text with treesitter (not working currently
-require("nvim-dap-virtual-text").setup()
-require('nvim-treesitter').setup()
+-- require('nvim-treesitter').setup()
+-- require("nvim-dap-virtual-text").setup()
 
 
 -- DAP Listeners
@@ -194,11 +194,11 @@ dap.listeners.after.event_initialized["dapui_config"] = function()
 end
 dap.listeners.before.event_terminated["dapui_config"] = function()
   -- vim.fn.StopDebugging()
-  dapui.close()
+  -- dapui.close()
 end
 dap.listeners.before.event_exited["dapui_config"] = function()
   -- vim.fn.StopDebugging()
-  dapui.close()
+  -- dapui.close()
 end
 
 EOF

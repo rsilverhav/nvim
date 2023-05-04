@@ -7,13 +7,14 @@ Plug 'scrooloose/nerdtree'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'vim-airline/vim-airline'
-Plug 'dart-lang/dart-vim-plugin'
 Plug 'jparise/vim-graphql'
 Plug 'tpope/vim-surround'
 Plug 'pantharshit00/vim-prisma'
-Plug 'prettier/vim-prettier', {
-  \ 'do': 'yarn install --frozen-lockfile --production',
-  \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'svelte', 'yaml', 'html'] }
+
+" Plug 'prettier/vim-prettier', { 'do': 'yarn install --frozen-lockfile --production' }
+" Plug 'prettier/vim-prettier', {
+"   \ 'do': 'yarn install --frozen-lockfile --production',
+"   \ 'for': ['javascript', 'typescript', '', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'svelte', 'yaml', 'html'] }
 
 Plug 'leafOfTree/vim-svelte-plugin'
 
@@ -128,6 +129,36 @@ function! OpenTypescriptPlayground()
   nnoremap <buffer> <leader>r :!yarn --cwd /Users/robinsilverhav/dev/scripts/ts_testing_ground start<cr>
 endfunction
 
+function! CheckIfCurrentFileInCwd()
+  let currentFile = expand("%:p")
+  let cwd = getcwd()
+  return currentFile =~ cwd && !(expand("%") =~ "NERD_tree_") && !(currentFile =~ "node_modules")
+endfunction
+
+function! OpenNerdTree()
+  if CheckIfCurrentFileInCwd()
+    execute ":NERDTreeFind"
+  else
+    execute ":NERDTree"
+  endif
+endfunction
+
+function! StartNerdtreeFollow()
+  if !(exists("g:NERDTree") && g:NERDTree.IsOpen())
+    call OpenNerdTree()
+    wincmd p
+  endif
+  augroup NerdtreeTracking
+  autocmd BufEnter * if CheckIfCurrentFileInCwd() | NERDTreeFind | wincmd p | endif
+  augroup END
+endfunction
+
+function! StopNerdtreeFollow()
+  execute ":NERDTreeClose"
+  autocmd! NerdtreeTracking BufEnter *
+endfunction
+
+
 command! Config vsp ~/.config/nvim/init.vim
 
 
@@ -180,15 +211,17 @@ let g:vim_svelte_plugin_use_typescript = 1
 "
 " Prettier
 "
-let g:prettier#autoformat = 1
-let g:prettier#autoformat_require_pragma = 0
+" let g:prettier#autoformat = 1
+" let g:prettier#autoformat_require_pragma = 0
 
 "
 " Keybinds
 "
 let mapleader=" "
-nnoremap <Leader>r :!python3 %<CR>
+nnoremap <Leader>r :!./.run.sh %<CR>
 nnoremap <silent> <Leader>c :Files<CR>
+nnoremap <silent> <Leader>C :CocCommand<CR>
+nnoremap <silent> <Leader>o :call CocAction('runCommand', 'editor.action.organizeImport')<CR>
 vnoremap <C-f> :call Ctrlf(GetVisual())<CR>
 nnoremap <C-f> :call Ctrlf("")<CR>
 nnoremap <C-y> :call FindAndReplace("")<CR>
@@ -205,7 +238,9 @@ nnoremap <Leader>m :call SeachMdn("")<CR>
 vnoremap <Leader>m :call SeachMdn(GetVisual())<CR>
 nnoremap <Leader>s :SpotifyInit<CR>
 nnoremap <Leader>b :Buffers<CR>
-nnoremap <Leader>n :NERDTreeFind<CR>
+nnoremap <Leader>n :call OpenNerdTree()<CR>
+nnoremap <Leader>Nn :call StartNerdtreeFollow()<CR>
+nnoremap <Leader>Nq :call StopNerdtreeFollow()<CR>
 nnoremap <Esc><Esc> :noh<CR>
 nnoremap n nzz
 nnoremap N Nzz
@@ -221,7 +256,6 @@ imap jk <ESC>
 "
 " Source
 "
-" source ~/.config/nvim/secrets.vim
 source ~/.config/nvim/coc.vim
 source ~/.config/nvim/spotify.vim
 source ~/.config/nvim/dap.vim
