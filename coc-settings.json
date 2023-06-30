@@ -1,9 +1,10 @@
 {
   "suggest.floatEnable": true,
   "suggest.enablePreview": true,
-  "coc.preferences.formatOnSaveFiletypes": [
-    "cpp"
-  ],
   "python.jediPath": "/usr/local/lib/python3.8/site-packages",
-  "svelte.enable-ts-plugin": true
+  "svelte.enable-ts-plugin": true,
+  "coc.preferences.formatOnSaveFiletypes": [
+    "python"
+  ],
+  "rust-analyzer.server.path": "/home/robinsilverhav/.cargo/bin/rust-analyzer"
 }
