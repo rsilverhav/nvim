@@ -31,7 +31,6 @@ Plug 'rcarriga/nvim-dap-ui'
 Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'theHamsta/nvim-dap-virtual-text'
 
-
 call plug#end()
 
 "
@@ -122,6 +121,22 @@ endfunction
 function! CreateSvelteComp()
   let name = expand("%:t:r")
   execute "normal! i<script lang=\"ts\">\n</script>\n\n<div>\ntest\n</div>\n\n<style>\n</style>\<Esc>"
+endfunction
+
+
+function! CreateCppHeaderSource()
+  let src_dir = input("Enter src dir: ", "src")
+  let inc_dir = input("Enter inc dir: ", "inc")
+  let class_name = input("Enter class name: ")
+  let header_guard = toupper(substitute(class_name, '\(\w\)\([A-Z]\)', '\1_\2', 'g')) . "_H"
+
+  execute "vsp " . inc_dir . "/" . class_name . ".h"
+  call append(line('^'), ["#ifndef " . header_guard, "#define " . header_guard, "", "class " . class_name . "{", "};", "", "#endif"])
+  noautocmd write
+
+  execute "vsp " . src_dir . "/" . class_name . ".cpp"
+  call append(line('^'), ["#include \"" . class_name . ".h\""])
+  noautocmd write
 endfunction
 
 function! OpenTypescriptPlayground()
