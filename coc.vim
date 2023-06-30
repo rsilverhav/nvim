@@ -151,3 +151,5 @@ function! CustomFormat()
   noautocmd write
 endfunction
 autocmd BufWritePre *.ts,*.tsx,*.cpp,*.h,*.rs call CustomFormat()
+
+nnoremap <silent> <leader>o :CocCommand clangd.switchSourceHeader vsplit<CR>
