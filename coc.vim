@@ -150,4 +150,4 @@ function! CustomFormat()
   call CocAction('format')
   noautocmd write
 endfunction
-autocmd BufWritePre *.ts,*.tsx call CustomFormat()
+autocmd BufWritePre *.ts,*.tsx,*.cpp,*.h,*.rs call CustomFormat()
