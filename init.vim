@@ -19,6 +19,7 @@ Plug 'pantharshit00/vim-prisma'
 Plug 'leafOfTree/vim-svelte-plugin'
 
 Plug 'cocopon/iceberg.vim'
+Plug 'sainnhe/everforest'
 Plug 'NLKNguyen/papercolor-theme'
 
 Plug '/Users/robinsilverhav/dev/vim-plugins/vim-spotify-ctrl' 
@@ -116,6 +117,11 @@ endfunction
 function! CreateReactFC()
   let name = expand("%:t:r")
   execute "normal! iimport React from 'react'\n\ninterface Props {}\n\nexport const \<C-r>=name\<CR>: React.FC<Props> = () => {\n return\n}\<Esc>"
+endfunction
+
+function! CreateReactComp()
+  let name = expand("%:t:r")
+  execute "normal! iinterface Props {}\n\nexport default function \<C-r>=name\<CR>({}: Props) {\n return \n}\<Esc>"
 endfunction
 
 function! CreateSvelteComp()
