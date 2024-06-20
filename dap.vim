@@ -91,6 +91,20 @@ for _, language in ipairs { "typescript", "javascript" } do
         console = "integratedTerminal",
         internalConsoleOptions = "neverOpen",
       },
+      {
+        type = "pwa-node",
+        request = "launch",
+        name = "Run zendr api dev",
+        runtimeExecutable = "node",
+        runtimeArgs = {
+          "run",
+          "dev"
+        },
+        rootPath = "${workspaceFolder}",
+        cwd = "${workspaceFolder}/api",
+        console = "integratedTerminal",
+        internalConsoleOptions = "neverOpen",
+      }
     }
 end
 

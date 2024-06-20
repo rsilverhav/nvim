@@ -10,6 +10,8 @@ Plug 'vim-airline/vim-airline'
 Plug 'jparise/vim-graphql'
 Plug 'tpope/vim-surround'
 Plug 'pantharshit00/vim-prisma'
+Plug 'github/copilot.vim'
+Plug 'pangloss/vim-javascript'
 
 " Plug 'prettier/vim-prettier', { 'do': 'yarn install --frozen-lockfile --production' }
 " Plug 'prettier/vim-prettier', {
@@ -26,6 +28,7 @@ Plug '/Users/robinsilverhav/dev/vim-plugins/vim-spotify-ctrl'
 
 " DAP
 Plug 'mfussenegger/nvim-dap'
+Plug 'nvim-neotest/nvim-nio'
 Plug 'mxsdev/nvim-dap-vscode-js'
 Plug 'microsoft/vscode-js-debug', { 'tag': 'v1.74.1', 'do': 'npm install --legacy-peer-deps && npm run compile' }
 Plug 'rcarriga/nvim-dap-ui'
@@ -62,13 +65,21 @@ set splitright
 "
 " Colors
 "
-colorscheme iceberg
 set cursorline
 
-hi CursorLine ctermbg=237
-hi Visual ctermbg=239
-hi CocErrorHighligh ctermfg=1 ctermbg=203 guifg=#e27878 guibg=#161821
-hi CocSearch ctermfg=120
+" Light teme
+if 2 == 1
+  set background=light
+  colorscheme PaperColor
+else
+  set background=dark
+  colorscheme iceberg
+  hi CursorLine ctermbg=237
+  hi Visual ctermbg=239
+  hi CocErrorHighligh ctermfg=1 ctermbg=203 guifg=#e27878 guibg=#161821
+  hi CocSearch ctermfg=120
+endif
+
 
 "
 " Helper functions

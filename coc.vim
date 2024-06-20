@@ -150,6 +150,6 @@ function! CustomFormat()
   call CocAction('format')
   noautocmd write
 endfunction
-autocmd BufWritePre *.ts,*.tsx,*.cpp,*.h,*.rs call CustomFormat()
+autocmd BufWritePre *.ts,*.tsx,*.cpp,*.h,*.rs,*.js call CustomFormat()
 
 nnoremap <silent> <leader>o :CocCommand clangd.switchSourceHeader vsplit<CR>
