@@ -6,5 +6,6 @@
   "coc.preferences.formatOnSaveFiletypes": [
     "python"
   ],
-  "rust-analyzer.server.path": "/home/robinsilverhav/.cargo/bin/rust-analyzer"
+  "rust-analyzer.server.path": "/home/robinsilverhav/.cargo/bin/rust-analyzer",
+  "eslint.filetypes": ["javascript", "javascriptreact", "typescript", "typescriptreact"]
 }
