@@ -225,6 +225,7 @@ autocmd User EasyMotionPromptEnd silent! CocEnable
 "
 " CoC
 "
+let g:coc_global_extensions = ['coc-tsserver', 'coc-css', 'coc-markdownlint']
 nnoremap <Leader>D :CocList diagnostics<CR>
 
 
