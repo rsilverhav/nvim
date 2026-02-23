@@ -24,7 +24,7 @@ Plug 'cocopon/iceberg.vim'
 Plug 'sainnhe/everforest'
 Plug 'NLKNguyen/papercolor-theme'
 
-Plug '/Users/robinsilverhav/dev/vim-plugins/vim-spotify-ctrl' 
+" Plug '/Users/robinsilverhav/dev/vim-plugins/vim-spotify-ctrl' 
 
 " DAP
 Plug 'mfussenegger/nvim-dap'
@@ -32,7 +32,7 @@ Plug 'nvim-neotest/nvim-nio'
 Plug 'mxsdev/nvim-dap-vscode-js'
 Plug 'microsoft/vscode-js-debug', { 'tag': 'v1.74.1', 'do': 'npm install --legacy-peer-deps && npm run compile' }
 Plug 'rcarriga/nvim-dap-ui'
-Plug 'nvim-treesitter/nvim-treesitter'
+" Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'theHamsta/nvim-dap-virtual-text'
 
 call plug#end()
@@ -80,6 +80,9 @@ else
   hi CocSearch ctermfg=120
 endif
 
+" Vertical lines on Splits
+set fillchars+=vert:\ 
+
 
 "
 " Helper functions
@@ -96,13 +99,14 @@ function! GetVisual()
   return join(lines, "\n")
 endfunction
 
+
 function! Ctrlf(text)
   let query = a:text
   if query == ""
     let query = input('Search: ')
   endif
   if query != ""
-    silent execute "grep! -rI --exclude-dir={node_modules,functions/node_modules,build,static,.git,ios,__sapper__} --exclude=stats.json " . shellescape(query) . " ."
+    silent execute "grep! --glob \"!{**/node_modules,functions/node_modules,build,static,.git,ios,__sapper__}\" " . shellescape(query) . " ."
     copen
     redraw!
   endif
@@ -289,5 +293,5 @@ imap jk <ESC>
 " Source
 "
 source ~/.config/nvim/coc.vim
-source ~/.config/nvim/spotify.vim
+" source ~/.config/nvim/spotify.vim
 source ~/.config/nvim/dap.vim
