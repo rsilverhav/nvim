@@ -95,7 +95,6 @@ for _, language in ipairs { "typescript", "javascript" } do
         type = "pwa-node",
         request = "launch",
         name = "Run zendr api dev",
-        runtimeExecutable = "node",
         runtimeArgs = {
           "run",
           "dev"
